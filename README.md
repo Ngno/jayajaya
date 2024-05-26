@@ -5,29 +5,30 @@
 Jaya Jaya Maju is a multinational company established in 2000. With over 1000 employees spread across the country, the company faces challenges in managing its workforce, particularly concerning the high attrition rate, which is currently over 10%.
 
 **Business Problem:**
-The main problem to be addressed is identifying the factors influencing the high attrition rate. This understanding can help HR management take appropriate actions to minimize the attrition rate.
+The main problem is to identify the factors influencing the high attrition rate. This understanding can help HR management take appropriate actions to minimize the attrition rate.
 
 **Project Scope:**
-This project will focus on data analysis to identify factors related to the high attrition rate at Jaya Jaya Maju. The data to be used is available in a dataset provided by the company.
+This project focuses on data analysis to identify factors related to the high attrition rate at Jaya Jaya Maju. The data is available in a dataset provided by the company.
 
 ### Preparation
 **Data Source:**
 The data source to be used is a dataset from Jaya Jaya Maju, which can be downloaded from [this link](https://github.com/dicodingacademy/a590-Belajar-Penerapan-Data-Science/tree/7cb1fd79a2914f6990d47f1dfc6e60c588c1a6ae/a590_proyek_pertama).
 
 **Setup Environment:**
-You need to set up a development environment that suits the project's needs, including installing software such as Python, Jupyter Notebook, and libraries like pandas, matplotlib, and seaborn.
+You need to set up a development environment that suits the project's needs, including installing software such as Python, Jupyter Notebook, and libraries like pandas, matplotlib, and seaborn (see requirements)
 
 ### Business Dashboard
-The business dashboard to be created will provide visualizations of the factors affecting the attrition rate, such as salary, education level, commute distance, job satisfaction, etc. This dashboard will offer HR managers clear insights into employee conditions, enabling them to make better decisions.
+Check out the published dashboard here: https://attrition-dashboard.streamlit.app/
+The business dashboard provides visualizations of the factors affecting the attrition rate, such as salary, education level, commute distance, job satisfaction, etc. This dashboard will offer HR managers clear insights into employee conditions, enabling them to make better decisions.
 
 ### Conclusion
 Based on the analysis of employee attrition data, we have identified several key factors contributing to the high attrition rate at Jaya Jaya Maju. These factors include demographics (Gender, Age, DistanceFromHome), monthly income (MonthlyIncome), work environment satisfaction (EnvironmentSatisfaction), and job roles (JobRole). Understanding these factors allows the company to take necessary actions to reduce the attrition rate and improve employee retention.
 
-### Rekomendasi Action Items
+### Action Items to be Recommended
 To address the identified issues and reduce the attrition rate, the following actions are recommended:
 
 **Action Item 1: Improve Work-Life Balance and Environment Satisfaction**
-   - Improve environment satisfaction by improving comfortability and convenience for indoor workers with low work-life balance such as Laboratory Technicians and Research Scientists. As an instance, providing ergonomist chair and fresh mini garden next to Research and Development department. 
+   - Improve environment satisfaction by improving comfortability and convenience for indoor workers with low work-life balance such as Laboratory Technicians and Research Scientists. As an instance, providing ergonomist chairs and a fresh mini garden next to the Research and Development department. 
    - Encourage a culture of taking regular breaks and vacations to prevent burnout.
 
 **Action Item 2: Enhance Compensation and Benefits**
