@@ -4,11 +4,6 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 import plotly.express as px
-import cufflinks as cf
-from streamlit_extras.metric_cards import style_metric_cards 
-import numpy as np
-import seaborn as sns
-import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder
 from imblearn.over_sampling import SMOTE
 import joblib
@@ -256,7 +251,9 @@ def render_dashboard_page(df_grouped, df_cleaned):
     st.title('📊 JJM Attrition Dashboard')
 
     # Filter
-    selected_attrition = st.selectbox('Select Attrition', ['All Data', 'Yes', 'No'])
+    st.markdown("<h2 style='text-align: center;'>Selected Attrition on Demographic Features</h2>", unsafe_allow_html=True)
+
+    selected_attrition = st.selectbox('Select Attrition (Demographic)', ['All Data', 'Yes', 'No'])
 
         # Filter data based on attrition
     if selected_attrition != 'All Data':
@@ -308,82 +305,73 @@ def render_dashboard_page(df_grouped, df_cleaned):
         st.metric(label="Employees Count", value=f"{total_employees}")
 
     # 3. Monthly Income
-    def median_income():
+    def median_income(df_metrics):
         median_income = df_metrics['MonthlyIncome'].median()
         delta = median_income - overall_median_income
         st.metric(label="Median Monthly Income", value=f"${median_income:,.2f}", delta=delta)
         
-    # 4. Job Satisfaction
-    def median_job_satisfaction():
-        med_job_satisfaction = df_metrics['JobSatisfaction'].median()
-        delta = med_job_satisfaction - overall_median_job_satisfaction
-        st.markdown('<h4 style="text-align:left; font-size:18px;">Median Job Satisfaction</h4>', unsafe_allow_html=True)
-        st.metric(label="", value=f"{med_job_satisfaction:.2f}", delta=f"{delta:.2f}")
-    
-  
-     # 5. Age
+     # 4. Age
     overall_median_age = df_cleaned['Age'].median()
     # Metric function for median age based on attrition
-    def median_age_metric():
+    def median_age_metric(df_metrics):
         median_age = df_metrics['Age'].median()
         delta = median_age - overall_median_age
         st.metric(label="Age Median", value=f"{median_age:.2f}", delta=f"{delta:.2f}")
      
-      # 6. Work-life Balance
-    def median_wlb():
+    # 5. Work-life Balance
+    def median_wlb(df_metrics):
         median_worklifebalance = df_metrics['WorkLifeBalance'].median()
         delta = median_worklifebalance - overall_median_wlb
         st.metric(label="Median Work-Life Balance", value=f"{median_worklifebalance:.2f}", delta=f"{delta:.2f}")
 
-        # 7. JobInvolvement
-    def median_jobinvolvement():
+    # 6. JobInvolvement
+    def median_jobinvolvement(df_metrics):
         overall_median_jobinvolvement = df_cleaned['JobInvolvement'].median()
         median_jobinvolvement = df_metrics['JobInvolvement'].median()
         delta = median_jobinvolvement - overall_median_jobinvolvement
         st.metric(label="Median Job Involvement", value=f"{median_jobinvolvement:.2f}", delta=f"{delta:.2f}")
  
     overall_median_env = df_cleaned['EnvironmentSatisfaction'].median()
-        # 8. EnvironmentSatisfaction
-    def median_env():
+    # 7. EnvironmentSatisfaction
+    def median_env(df_metrics):
         median_environment_satisfaction = df_metrics['EnvironmentSatisfaction'].median()
         delta = median_environment_satisfaction - overall_median_env
         st.metric(label="Median Environment Satisfaction", value=f"{median_environment_satisfaction:.2f}", delta=f"{delta:.2f}")
 
-    # 9. Stock Option Level
-    def mode_stock():
+    # 8. Stock Option Level
+    def mode_stock(df_metrics):
         mode_stocklevel = df_metrics['StockOptionLevel'].mode()[0]
         delta = mode_stocklevel - overall_mode_stock
         st.metric(label="Mode Stock Option Level", value=f"{mode_stocklevel}", delta=f"{delta}")
 
-   
-    # 11. Gender Female
-    def percent_gender_female():
+    # 9. Gender Female
+    def percent_gender_female(df_metrics):
         percent_female = (df_metrics[df_metrics['Gender'] == 'Female']['Gender'].count() / all_gender_female) * 100
-        st.metric(label="Percentage of Selected Attrition on Female", value=f"{percent_female:.2f}%")
+        st.metric(label="Selected Attrition on Female", value=f"{percent_female:.2f}%")
 
     # 12. Gender Male
-    def percent_gender_male():
+    def percent_gender_male(df_metrics):
         percent_male = (df_metrics[df_metrics['Gender'] == 'Male']['Gender'].count() / all_gender_male) * 100
-        st.metric(label="Percentage of Selected Attrition on Male", value=f"{percent_male:.2f}%")
+        st.metric(label="Selected Attrition on Male", value=f"{percent_male:.2f}%")
 
-    # 13. Marital Status: Single
-    def percent_single():
+    # 13. Marital Status: Single   
+    def percent_single(df_metrics):
         single_count = df_metrics[df_metrics['MaritalStatus'] == 'Single'].shape[0]
         percent_single = (df_metrics[df_metrics['MaritalStatus'] == 'Single']['MaritalStatus'].count() / all_marital_status_single) * 100
-        st.metric(label="Percentage of Selected Attrition on Single", value=f"{percent_single:.2f}%")
+        st.metric(label="Selected Attrition on Single", value=f"{percent_single:.2f}%")
 
     # 14. Marital Status: Married
-    def percent_married():
+    def percent_married(df_metrics):
         married_count = df_metrics[df_metrics['MaritalStatus'] == 'Married'].shape[0]
         percent_married = (df_metrics[df_metrics['MaritalStatus'] == 'Married']['MaritalStatus'].count() / all_marital_status_married) * 100
-        st.metric(label="Percentage of Selected Attrition on Married", value=f"{percent_married:.2f}%")
+        st.metric(label="Selected Attrition on Married", value=f"{percent_married:.2f}%")
 
     # 15. Marital Status: Divorced
-    def percent_divorced():
+    def percent_divorced(df_metrics):
         divorced_count = df_metrics[df_metrics['MaritalStatus'] == 'Divorced'].shape[0]
         percent_divorced = (df_metrics[df_metrics['MaritalStatus'] == 'Divorced']['MaritalStatus'].count() / all_marital_status_divorced) * 100
-        st.metric(label="Percentage of Selected Attrition on Divorced", value=f"{percent_divorced:.2f}%")
-    
+        st.metric(label="Selected Attrition on Divorced", value=f"{percent_divorced:.2f}%")
+
     # 16. Age
     overall_median_age = df_cleaned['Age'].median()
     # Metric function for median age based on attrition
@@ -399,28 +387,28 @@ def render_dashboard_page(df_grouped, df_cleaned):
     overall_manager_median_income = df_cleaned[df_cleaned['JobRole'] == 'Manager']['MonthlyIncome'].median()
 
     ## Healthcare Representative
-    def median_income_healthcare_representative():
+    def median_income_healthcare_representative(df_metrics):
         jobrole_median_income = df_metrics[df_metrics['JobRole'] == 'Healthcare Representative']['MonthlyIncome'].median()
         delta = jobrole_median_income - overall_healthcare_median_income
         st.markdown('<h4 style="text-align:left; font-size:18px;">Healthcare Representative</h4>', unsafe_allow_html=True)
         st.metric(label="Median Monthly Income", value=f"${jobrole_median_income:,.2f}", delta=delta)
 
     #  Research Scientist
-    def median_income_research_scientist():
+    def median_income_research_scientist(df_metrics):
         jobrole_median_income = df_metrics[df_metrics['JobRole'] == 'Research Scientist']['MonthlyIncome'].median()
         delta = jobrole_median_income - overall_researchscientist_median_income
         st.markdown('<h4 style="text-align:left; font-size:18px;">Research Scientist</h4>', unsafe_allow_html=True)
         st.metric(label="Median Monthly Income", value=f"${jobrole_median_income:,.2f}", delta=delta)
 
     #  Sales Executive
-    def median_income_sales_executive():
+    def median_income_sales_executive(df_metrics):
         jobrole_median_income = df_metrics[df_metrics['JobRole'] == 'Sales Executive']['MonthlyIncome'].median()
         delta = jobrole_median_income - overall_salesexecutive_median_income
         st.markdown('<h4 style="text-align:left; font-size:18px;">Sales Executive</h4>', unsafe_allow_html=True)
         st.metric(label="Median Monthly Income", value=f"${jobrole_median_income:,.2f}", delta=delta)
 
     # Manager
-    def median_income_manager():
+    def median_income_manager(df_metrics):
         jobrole_median_income = df_metrics[df_metrics['JobRole'] == 'Manager']['MonthlyIncome'].median()
         delta = jobrole_median_income - overall_manager_median_income
         st.markdown('<h4 style="text-align:left; font-size:18px;">Manager</h4>', unsafe_allow_html=True)
@@ -430,14 +418,14 @@ def render_dashboard_page(df_grouped, df_cleaned):
     overall_laboratory_median_income = df_cleaned[df_cleaned['JobRole'] == 'Laboratory Technician']['MonthlyIncome'].median()
     overall_researchdirector_median_income = df_cleaned[df_cleaned['JobRole'] == 'Research Director']['MonthlyIncome'].median()
     # Laboratory Technician
-    def median_income_laboratory_technician():
+    def median_income_laboratory_technician(df_metrics):
         jobrole_median_income = df_metrics[df_metrics['JobRole'] == 'Laboratory Technician']['MonthlyIncome'].median()
         delta = jobrole_median_income - overall_laboratory_median_income
         st.markdown('<h4 style="text-align:left; font-size:18px;">Laboratory Technician</h4>', unsafe_allow_html=True)
         st.metric(label="Median Monthly Income", value=f"${jobrole_median_income:,.2f}", delta=delta)
 
     # Research Director
-    def median_income_research_director():
+    def median_income_research_director(df_metrics):
         jobrole_median_income = df_metrics[df_metrics['JobRole'] == 'Research Director']['MonthlyIncome'].median()
         delta = jobrole_median_income - overall_researchdirector_median_income
         st.markdown('<h4 style="text-align:left; font-size:18px;">Research Director</h4>', unsafe_allow_html=True)
@@ -446,7 +434,7 @@ def render_dashboard_page(df_grouped, df_cleaned):
     overall_manufacturingdirector_median_income = df_cleaned[df_cleaned['JobRole'] == 'Manufacturing Director']['MonthlyIncome'].median()
     overall_hr_median_income = df_cleaned[df_cleaned['JobRole'] == 'Human Resources']['MonthlyIncome'].median()
     # Manufacturing Director
-    def median_income_manufacturing_director():
+    def median_income_manufacturing_director(df_metrics):
         jobrole_median_income = df_metrics[df_metrics['JobRole'] == 'Manufacturing Director']['MonthlyIncome'].median()
         delta = jobrole_median_income - overall_manufacturingdirector_median_income
         st.markdown('<h4 style="text-align:left; font-size:18px;">Manufacturing Director</h4>', unsafe_allow_html=True)
@@ -454,7 +442,7 @@ def render_dashboard_page(df_grouped, df_cleaned):
     
     
     # Human Resources
-    def median_income_human_resources():
+    def median_income_human_resources(df_metrics):
         jobrole_median_income = df_metrics[df_metrics['JobRole'] == 'Human Resources']['MonthlyIncome'].median()
         delta = jobrole_median_income - overall_hr_median_income
         st.markdown('<h4 style="text-align:left; font-size:18px;">Human Resources</h4>', unsafe_allow_html=True)
@@ -462,14 +450,57 @@ def render_dashboard_page(df_grouped, df_cleaned):
     
     # Sales Representative
     overall_salesrepresentative_median_income = df_cleaned[df_cleaned['JobRole'] == 'Sales Representative']['MonthlyIncome'].median()
-    def median_income_sales_representative():
+    def median_income_sales_representative(df_metrics):
         jobrole_median_income = df_metrics[df_metrics['JobRole'] == 'Sales Representative']['MonthlyIncome'].median()
         delta = jobrole_median_income - overall_salesrepresentative_median_income
         st.markdown('<h4 style="text-align:left; font-size:18px;">Sales Representative</h4>', unsafe_allow_html=True)
         st.metric(label="Median Monthly Income", value=f"${jobrole_median_income:,.2f}", delta=delta)
 
+    # 18. Overtime Yes
+    def percent_overtime_yes(df_metrics):
+        df_overtime = df_metrics[df_metrics['OverTime'] == 'Yes']
+        percent_overtime = (df_overtime.shape[0] / df_metrics.shape[0]) * 100
+        st.metric(label="Percentage of Employees with Overtime", value=f"{percent_overtime:.2f}%")
 
-       # Apply consistent styling to metric cards
+    
+    # 19. Jobrole_monthly income metrics
+    def jobrole_monthly_income_metrics(df_metrics, df_cleaned, job_role):
+        # Convert JobLevel to string
+        df_metrics['JobLevel'] = df_metrics['JobLevel'].astype(str)
+        df_cleaned['JobLevel'] = df_cleaned['JobLevel'].astype(str)
+
+        # Calculate the overall mean monthly income per job role per job level
+        overall_mean_income_per_level = df_cleaned.groupby(['JobRole', 'JobLevel'])['MonthlyIncome'].mean().reset_index()
+        overall_mean_income_per_level.set_index(['JobRole', 'JobLevel'], inplace=True)
+        
+        # Filter the DataFrame for the specific job role
+        df_filtered = df_metrics[df_metrics['JobRole'] == job_role]
+        
+        # Iterate through each job level within the specified job role
+        job_levels = df_filtered['JobLevel'].unique()
+        for level in job_levels:
+            # Filter the DataFrame for the specific job level
+            df_level = df_filtered[df_filtered['JobLevel'] == level]
+
+            # Calculate the mean monthly income for the specific job level in the filtered data
+            mean_income = df_level['MonthlyIncome'].mean()
+
+            # Check if the fixed mean income for the job role and job level exists
+            if (job_role, level) in overall_mean_income_per_level.index:
+                fixed_mean_income = overall_mean_income_per_level.loc[(job_role, level), 'MonthlyIncome']
+
+                # Calculate the delta as the difference between the current mean income and the fixed overall mean income
+                delta = mean_income - fixed_mean_income
+
+                # Display the metric
+                st.metric(label=f"Average Monthly Income for {job_role} (Level {level})",
+                        value=f"${mean_income:,.2f}",
+                        delta=delta)
+            else:
+                # Display a warning if no data is available for the specific job role and job level
+                st.warning(f"No data available for {job_role} (Level {level}) in the overall dataset.")
+
+
     ############ CHARTS #################
     # 1. Gender
     def gender_chart(df_chart):
@@ -488,7 +519,9 @@ def render_dashboard_page(df_grouped, df_cleaned):
                     'size': 27
                 },
                 'x': 0.5,
-                'xanchor': 'center'
+                'xanchor': 'center',
+                'y': 0.96,  
+                'yanchor': 'top'
             },
             legend=dict(
                 orientation='h',
@@ -507,9 +540,10 @@ def render_dashboard_page(df_grouped, df_cleaned):
         jobrole_cnt = df_chart['JobRole'].value_counts().reset_index()
         jobrole_cnt.columns = ['JobRole', 'Count']
         pie_fig_jobrole = px.pie(jobrole_cnt, names='JobRole', values='Count', title='Attrition by JobRole', hole=0.4)
+        
         pie_fig_jobrole.update_layout(
-            width=400,
-            height=400,
+            width=400,  
+            height=400, 
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0,0,0,0)',
             title={
@@ -519,30 +553,31 @@ def render_dashboard_page(df_grouped, df_cleaned):
                     'size': 27
                 },
                 'x': 0.5,
-                'xanchor': 'center'
+                'xanchor': 'center',
+                'y': 0.98,  
+                'yanchor': 'top'  
             },
             legend=dict(
-                orientation='h',
-                yanchor='bottom',
-                y=-0.3,
-                xanchor='center',
-                x=0.5
+                orientation='v',  
+                yanchor='auto',
+                y=1,  
+                xanchor='left',
+                x=-1  
             )
         )
         chart_jobrole = st.plotly_chart(pie_fig_jobrole)
         return chart_jobrole
 
-      
+        
     # 3. Age distribusion
     def age_chart(df_chart):
         st.markdown('### Age Distribution')
         age_chart = alt.Chart(df_chart).mark_bar().encode(
         x=alt.X('Age_Group:N', title='Age Group'),
         y=alt.Y('count():Q', title='Count'),
-        color=alt.Color('Attrition:N', title='Attrition')).properties(width=400, height=300)
+        color=alt.Color('Attrition:N', title='Attrition')).properties(width=400, height=350)
         chart_age = st.altair_chart(age_chart, use_container_width=True)
         return chart_age
-
 
         
     # 4. JobRole 
@@ -550,148 +585,85 @@ def render_dashboard_page(df_grouped, df_cleaned):
     attrition_jobrole_level_counts = df_metrics.groupby(['JobRole', 'JobLevel']).size().reset_index(name='Attrition_Count')
     df_attrition_jobrolelevel = attrition_jobrole_level_counts.merge(total_jobrole_level_counts, on=['JobRole', 'JobLevel'])
     df_attrition_jobrolelevel['Attrition_Percentage'] = (df_attrition_jobrolelevel['Attrition_Count'] / df_attrition_jobrolelevel['Total']) * 100
-
-    def jobrole_level_chart(df_attrition_jobrolelevel):
-        st.markdown('### Attrition Percentage by Job Role and Job Level')
-        jobrole_level = px.bar(df_attrition_jobrolelevel, x='JobRole', y='Attrition_Percentage', color='Attrition_Count', facet_col='JobLevel')
-        st.plotly_chart(jobrole_level)
-
-    
-    # 5. Job satisfaction
-    median_job_satisfaction = df_metrics.groupby(['JobRole', 'JobLevel'])['JobSatisfaction'].median().reset_index()
-
-    def jobrole_satisfaction_chart(df_job_satisfaction):
-        st.markdown('### Median Job Satisfaction by Job Role and Job Level')
-        jobrole_level = px.bar(df_job_satisfaction, x='JobRole', y='JobSatisfaction', color='JobLevel', 
-                            barmode='group')
-        st.plotly_chart(jobrole_level)
-
-
-    # 6. Job Involvement chart
-    def jobinvolvement_chart(df_cleaned, df_metrics):
-        total_counts = df_cleaned.groupby(['JobRole', 'JobInvolvement', 'JobLevel']).size().reset_index(name='Total')
-        attrition_counts = df_metrics.groupby(['JobRole', 'JobInvolvement', 'JobLevel']).size().reset_index(name='Attrition_Count')
-        df_combined = total_counts.merge(attrition_counts, on=['JobRole', 'JobInvolvement', 'JobLevel'], how='left')
-        df_combined['Attrition_Count'] = df_combined['Attrition_Count'].fillna(0)
-        df_combined['Attrition_Percentage'] = (df_combined['Attrition_Count'] / df_combined['Total']) * 100
-
-        # Area Chart for Job Involvement and Attrition Percentage
-        st.markdown('### Job Involvement by Job Role, Job Level, and Attrition Percentage')
-        fig_job_involvement_area = px.area(
-            df_combined, 
-            x='JobInvolvement', 
-            y='Attrition_Percentage', 
-            color='JobLevel', 
-            facet_col='JobRole', 
-            facet_col_wrap=3,
-            labels={'JobInvolvement': 'Job Involvement', 'Attrition_Percentage': 'Attrition Percentage', 'JobRole': 'Job Role'},
-            hover_data={'Total': True, 'Attrition_Count': True}
-        )
-
-        # Update hover template to include more details
-        fig_job_involvement_area.update_traces(hovertemplate=(
-            'Job Involvement: %{x}<br>' +
-            'Attrition Percentage: %{y:.2f}%<br>' +
-            'Total Employees: %{customdata[0]}<br>' +
-            'Attrition Count: %{customdata[1]}'
-        ))
-
-        # Add custom data for hover template
-        fig_job_involvement_area.update_traces(customdata=df_combined[['Total', 'Attrition_Count']])
-
-        st.plotly_chart(fig_job_involvement_area)
-
-
-    # 7. Work-life Balance
-    def work_life_balance_area_chart_faceted(df):
-        # Ensure the JobRole and JobLevel columns are categories
-        df['JobRole'] = df['JobRole'].astype('category')
-        df['JobLevel'] = df['JobLevel'].astype('category')
-
-        st.markdown('### Work-Life Balance by Job Role and Job Level')
-        fig = px.area(df, x='JobRole', y='WorkLifeBalance', color='JobLevel',
-                        facet_col='JobLevel', facet_col_wrap=3,
-                        labels={'WorkLifeBalance': 'Work-Life Balance', 'JobRole': 'Job Role', 'JobLevel': 'Job Level'})
-
-        st.plotly_chart(fig)
-
-    
-    # 8. Combined Satisfaction Bar Chart
-    def combined_satisfaction_barchart(df_cleaned, df_metrics):
-        total_counts = df_cleaned.groupby(['JobRole', 'EnvironmentSatisfaction', 'RelationshipSatisfaction']).size().reset_index(name='Total')
-        attrition_counts = df_metrics.groupby(['JobRole', 'EnvironmentSatisfaction', 'RelationshipSatisfaction']).size().reset_index(name='Attrition_Count')
-        df_combined = total_counts.merge(attrition_counts, on=['JobRole', 'EnvironmentSatisfaction', 'RelationshipSatisfaction'], how='left')
-        df_combined['Attrition_Count'] = df_combined['Attrition_Count'].fillna(0)
-        df_combined['Attrition_Percentage'] = (df_combined['Attrition_Count'] / df_combined['Total']) * 100
-
-        # Area Chart for Environment Satisfaction and Relationship Satisfaction
-        st.markdown('### Attrition Percentage by Environment Satisfaction and Relationship Satisfaction')
-        fig_satisfaction_area = px.area(
-            df_combined, 
-            x='EnvironmentSatisfaction', 
-            y='Attrition_Percentage', 
-            color='RelationshipSatisfaction',
-            facet_col='JobRole', 
-            facet_col_wrap=3,
-            labels={
-                'EnvironmentSatisfaction': 'Environment Satisfaction', 
-                'Attrition_Percentage': 'Attrition Percentage', 
-                'JobRole': 'Job Role', 
-                'RelationshipSatisfaction': 'Relationship Satisfaction'
-            },
-            hover_data={'Total': True, 'Attrition_Count': True}
-        )
-
-        # Update hover template to include more details
-        fig_satisfaction_area.update_traces(hovertemplate=(
-            'Environment Satisfaction: %{x}<br>' +
-            'Attrition Percentage: %{y:.2f}%<br>' +
-            'Total Employees: %{customdata[0]}<br>' +
-            'Attrition Count: %{customdata[1]}'
-        ))
-
-        # Add custom data for hover template
-        fig_satisfaction_area.update_traces(customdata=df_combined[['Total', 'Attrition_Count']])
-
-        st.plotly_chart(fig_satisfaction_area)
+   
   
-    # 9. JobRole Tree Map
-    def jobrole_treemap(df_cleaned, selected_attrition):
-        st.markdown("### Monthly Income based on Jobrole and Gender")
-        fig = px.treemap(filtered_data, 
+    # 5. JobRole Tree Map
+    def jobrole_treemap(df_cleaned):
+        st.markdown("#### Monthly Income based on Jobrole and Gender")
+        fig = px.treemap(df_cleaned, 
                         path=['Gender', 'Department', 'JobRole'],
                         color_continuous_scale='RdBu',
                         color='MonthlyIncome',  
                         hover_data={'Gender': True, 'Department': True, 'JobRole': True, 'MonthlyIncome': True}
                         )
+        fig.update_layout(width=550, height=400, margin=dict(t=0, b=0, l=0, r=0))  # Adjust margin to reduce distance
 
         st.plotly_chart(fig)
     
-    # 10. WLB treemap
-    def wlb_treemap(df_grouped, selected_attrition):
-        if selected_attrition == 'All Data':
-            df_filtered = df_grouped.copy()  
-        else:
-            attrition_value = 1 if selected_attrition == 'Yes' else 0  
-            df_filtered = df_grouped[df_grouped['Attrition'] == attrition_value]
+    # 6. Distance Tree Map
+    def distance_treemap(df_grouped):
+        st.markdown("#### WorkLifeBalance based on Gender, Distance, and Overtime")
+        fig = px.treemap(df_grouped, 
+                        path=['Gender', 'DistanceFromHome_Group', 'OverTime'],
+                        color_continuous_scale='RdBu',
+                        color='WorkLifeBalance',  
+                        hover_data={'Gender': True, 'DistanceFromHome_Group': True, 'OverTime': True, 'WorkLifeBalance': True}
+                        )
 
-        # print("Filtered DataFrame:")
-        # print(df_filtered.head()) 
+        fig.update_layout(width=550, height=400, margin=dict(t=0, b=0, l=0, r=0))  # Adjust margin to reduce distance
 
-        # Create the treemap
-        st.markdown('### Employee Distribution by Gender, OverTime, Marital Status, WorkLifeBalance')
-        fig = px.treemap(df_filtered, 
-                        path=['Gender', 'OverTime', 'MaritalStatus', 'WorkLifeBalance'], 
-                        color='WorkLifeBalance', 
-                        color_continuous_scale='blues')
-        fig.update_layout(margin=dict(t=50, l=0, r=0, b=0))  # Adjust margin for better layout
-
-        print("Figure Object:")
-        print(fig) 
         st.plotly_chart(fig)
 
 
-    # 11. Job involvement on jobrole
+    # 7. Department gender
+    def marital_treemap(df_chart, selected_attrition):
+        st.markdown("#### Marital Status based on Gender, and Department")
+        fig = px.treemap(df_chart, 
+                        path=['MaritalStatus', 'Gender', 'Department'],
+                        color='MaritalStatus',
+                        color_discrete_map={'Married': 'blues', 'Single': 'greys', 'Divorced': 'greens'},  
+                        hover_data={'Gender': True, 'MaritalStatus': True, 'Department': True}
+                        )
+
+        fig.update_layout(width=500, height=300, margin=dict(t=0, b=0, l=0, r=0))  # Adjust margin to reduce distance
+
+        st.plotly_chart(fig)
+
+
+    
+    # 8. Environment Tree Map
+    def environmentsatisfaction_treemap(df_grouped):
+        st.markdown("#### EnvironmentSatisfaction based on Age, Deparment, and Overtime")
+        fig = px.treemap(df_grouped, 
+                        path=['Department', 'OverTime','Age_Group'],
+                        color_continuous_scale='RdBu',
+                        color='EnvironmentSatisfaction',  
+                        hover_data={'OverTime': True, 'Age_Group': True, 'Department': True, 'EnvironmentSatisfaction': True}
+                        )
+        fig.update_layout(
+            width=600, 
+            height=400, 
+            margin=dict(t=0, b=0, l=0, r=0),
+            coloraxis_colorbar=dict(title='EnvSatisfaction')
+       ) 
+
+        st.plotly_chart(fig)
+
+    
+      # 9. JobRole Tree Map
+    def relationship_treemap(df_grouped):
+        st.markdown("#### RelationshipSatisfaction based on Gender, Age, and Deparment")
+        fig = px.treemap(df_grouped, 
+                        path=['Gender', 'Age_Group', 'Department'],
+                        color_continuous_scale='RdBu',
+                        color='RelationshipSatisfaction',  
+                        hover_data={'Gender': True, 'Age_Group': True, 'Department': True, 'RelationshipSatisfaction': True}
+                        )
+        fig.update_layout(width=600, height=400, margin=dict(t=0, b=0, l=0, r=0))  # Adjust margin to reduce distance
+
+        st.plotly_chart(fig)
+    
+    # 10. Job involvement on jobrole
     def jobrole_inv(df_metrics):
         df_job_involvement_counts = df_metrics.groupby(['JobRole', 'JobInvolvement', 'Attrition']).size().reset_index(name='Count')
 
@@ -703,6 +675,44 @@ def render_dashboard_page(df_grouped, df_cleaned):
         fig_job_involvement_area.update_traces(mode='lines+markers')
         st.plotly_chart(fig_job_involvement_area)
 
+    # 11. Job level on jobrole
+    def jobrole_level(df_metrics):
+        df_job_level_counts = df_metrics.groupby(['JobRole', 'JobLevel']).size().reset_index(name='Count')
+
+        # Line Chart for Job Level counts by Job Role
+        fig_job_level_line = px.line(
+            df_job_level_counts,
+            x='JobLevel',
+            y='Count',
+            color='JobRole',
+            markers=True, 
+            labels={'JobLevel': 'Job Level', 'Count': 'Count of Employees', 'JobRole': 'Job Role'}
+        )
+        
+         
+        fig_job_level_line.update_layout(
+            width=550, 
+            height=370,  
+            margin=dict(t=80, b=0, l=0, r=0),
+            title={
+                'text': 'Job Level Counts by Job Role',
+                'font': {
+                    'color': 'white',
+                    'size': 27
+                },
+                'x': 0.5,
+                'xanchor': 'center',
+                'y': 0.9,  
+                'yanchor': 'top'
+            },
+            xaxis=dict(
+                tickmode='array', 
+                tickvals=sorted(df_job_level_counts['JobLevel'].unique()),
+                ticktext=[str(int(x)) for x in sorted(df_job_level_counts['JobLevel'].unique())],
+                tickangle=0  
+        )
+    )
+        st.plotly_chart(fig_job_level_line)
 
     # 12. Gender and distance
     def attrition_percentage_by_gender_and_distance(df_grouped, df_chart, selected_attrition):
@@ -721,7 +731,7 @@ def render_dashboard_page(df_grouped, df_cleaned):
         df_combined['Attrition_Percentage'] = (df_combined['Attrition_Count'] / df_combined['Total']) * 100
 
         # Bar Chart for Attrition Percentage by Gender and DistanceFromHome_Group
-        st.markdown('### Attrition Percentage by Gender and Distance From Home')
+        st.markdown('#### Attrition Percentage by Gender and Distance From Home')
         fig_attrition_bar = px.bar(
             df_combined,
             x='DistanceFromHome_Group',
@@ -747,18 +757,54 @@ def render_dashboard_page(df_grouped, df_cleaned):
         # Add custom data for hover template
         fig_attrition_bar.update_traces(customdata=df_combined[['Total', 'Attrition_Count']])
 
+        # Set the size of the figure
+        fig_attrition_bar.update_layout(
+        width=400,  
+        height=300 
+        )
+
         st.plotly_chart(fig_attrition_bar)
     
-    # Training treeemap
-    def training_treemap(df_metrics):
-        fig = px.treemap(df_metrics, 
-                        path=['TrainingTimesLastYear', 'JobSatisfaction', 'Department'], 
-                        values='JobSatisfaction',  
-                        color='JobSatisfaction',  
-                        color_continuous_scale='Blues',
-                        title='Employee Distribution by Training Times, Job Satisfaction, and Department',
-                        labels={'JobSatisfaction': 'Job Satisfaction', 'TrainingTimesLastYear': 'Training Times Last Year'})
-        fig.update_layout(margin=dict(t=50, l=0, r=0, b=0), coloraxis_colorbar=dict(title='Job Satisfaction'))
+    
+    # 13. Overtime treemap
+    def overtime_treemap(df_df_metrics):
+        st.markdown("#### EnvSatisfaction based on Department, TotalWorkingYears, and OverTime")
+        # Ensure the DataFrame contains the necessary columns
+        required_columns = ['Department', 'TotalWorkingYears_Group', 'OverTime', 'JobSatisfaction']
+        if not all(column in df_chart.columns for column in required_columns):
+            st.error(f"The DataFrame must contain the following columns: {', '.join(required_columns)}")
+            return
+        
+        # Convert TrainingTimesLastYear to string
+        df_chart['TotalWorkingYears_Group'] = df_metrics['TotalWorkingYears_Group'].astype(str)
+        
+        # Add a count column for the values in the treemap
+        df_chart['Count'] = 1
+        
+        # Create the treemap
+        fig = px.treemap(
+            df_chart, 
+            path=['Department','TotalWorkingYears_Group', 'OverTime'], 
+            values='Count',  
+            color='EnvironmentSatisfaction',  
+            color_continuous_scale='Blues',
+            labels={
+                'TotalWorkingYears_Group': 'Total Working Years',
+                'Department': 'Department',
+                'EnvironmentSatisfaction': 'Env Satisfaction',
+                'Count': 'Count',
+                'OverTime': 'Overtime'
+            }
+        )
+        
+        fig.update_layout(
+            width=550, 
+            height=400,
+            margin=dict(t=0, l=0, r=0, b=0), 
+            coloraxis_colorbar=dict(title='EnvSatisfaction')
+        )
+        
+        # Display the treemap in Streamlit
         st.plotly_chart(fig)
 
 #########################
@@ -766,159 +812,133 @@ def render_dashboard_page(df_grouped, df_cleaned):
 # Streamlit application
 
 #########################
-    # Display metrics
-    st.markdown("<h2 style='text-align: center;'>Selected Attrition on Demographic Features</h2>", unsafe_allow_html=True)
-    if selected_attrition == 'All Data':
-        filtered_data = df_cleaned  
-        title = 'Selected Attrition: All Data'
-    else:
-        attrition_value = 1 if selected_attrition == 'Yes' else 0
-        filtered_data = df_cleaned[df_cleaned['Attrition'] == attrition_value]
-        title = f'Attrition: {"Yes" if attrition_value == 1 else "No"}'
-    st.markdown(f"<h4 style='text-align: center;'>{title}</h4>", unsafe_allow_html=True)
-
-    st.write("")
     
     # Set the demographic columns
-    
     # Create columns for metrics
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3, col4 = st.columns([1, 1.5, 2, 2])
     with col1:
         overall_attrition_metric(df_cleaned)
-    with col2:
         total_employee_metric(df_metrics)
-    with col3:
-        percent_gender_male()        
-    with col4:
-        percent_gender_female()
-      
-        
-    col6, col7, col8, col5 = st.columns(4) 
-    with col6:
-        percent_single()
-    with col7:
-        percent_married()
-    with col8:
-        percent_divorced()
-    with col5:
+        percent_gender_male(df_metrics)
+        percent_gender_female(df_metrics)
+        percent_single(df_metrics)
+        percent_married(df_metrics)
+        percent_divorced(df_metrics)
         median_age_metric(df_metrics, overall_median_age)
-    
-    
-    cola, colb, colc1 = st.columns(3)
-    with cola:
+    with col2:
         gender_chart(df_metrics)
-    with colb:
+        attrition_percentage_by_gender_and_distance(df_grouped, df_metrics, selected_attrition)
+        
+    with col3:
         age_chart(df_chart)
-    with colc1:
         jobrole_chart(df_chart)
+    with col4:
+        marital_treemap(df_chart, selected_attrition) 
+        jobrole_level(df_metrics) 
 
-    colc, cold = st.columns(2)
-    with colc:
-        attrition_percentage_by_gender_and_distance(df_grouped, df_chart, selected_attrition)
-    with cold:
-        jobrole_level_chart(df_attrition_jobrolelevel) 
+      ########### middle #############
 
-    st.write("")
-
-    st.markdown("<h2 style='text-align: center;'>Features Value based on Selected Attrition</h2>", unsafe_allow_html=True)
-    if selected_attrition == 'All Data':
-        filtered_data = df_cleaned  
-        title = 'Selected Attrition: All Data'
-    else:
-        attrition_value = 1 if selected_attrition == 'Yes' else 0
-        filtered_data = df_cleaned[df_cleaned['Attrition'] == attrition_value]
-        title = f'Attrition: {"Yes" if attrition_value == 1 else "No"}'
-    st.markdown(f"<h4 style='text-align: center;'>{title}</h4>", unsafe_allow_html=True)
-
-    st.write("")
-    col9, col10, col43, col44, col45 = st.columns(5)
-    with col9:
-        median_income()
-    with col10:        
-        mode_stock()
-    with col43:
-        median_env()    
-    with col44:
-        median_wlb()
-    with col45:
-        median_jobinvolvement()
-    st.write("")    
-        
-    st.write("")   
-    cole, colf = st.columns(2)
-    with cole:
-        training_treemap(df_metrics)
-    with colf:
-        jobrole_treemap(df_cleaned, selected_attrition)
-  
-    st.markdown("<h2 style='text-align: center;'>Income per Jobrole</h2>", unsafe_allow_html=True)
-    if selected_attrition == 'All Data':
-        filtered_data = df_cleaned  
-        title = 'Selected Attrition: All Data'
-    else:
-        attrition_value = 1 if selected_attrition == 'Yes' else 0
-        filtered_data = df_cleaned[df_cleaned['Attrition'] == attrition_value]
-        title = f'Attrition: {"Yes" if attrition_value == 1 else "No"}'
-    st.markdown(f"<h4 style='text-align: center;'>{title}</h4>", unsafe_allow_html=True)
-
-    st.write("")
+     # Second filter bar for middle features
+    st.markdown("<h2 style='text-align: center;'>Selected Attrition on Job Metrics</h2>", unsafe_allow_html=True)
     
-    col11, col12, col13, col14, col15 = st.columns(5)
-    with col11:
-        median_income_research_director()
-    with col12:
-        median_income_manager()
-    with col13:
-        median_income_healthcare_representative()
-    with col14:
-        median_income_manufacturing_director()
-    with col15:
-        median_income_sales_executive()
-        
-    col16, col17, col18, col19 = st.columns(4)
-    with col16:
-        median_income_human_resources()
-    with col17:
-        median_income_laboratory_technician()
-    with col18:
-        median_income_research_scientist()
-    with col19:
-        median_income_sales_representative() 
-        
-            
+    selected_attrition_middle = st.selectbox('Select Attrition (Job Metrics)', ['All Data', 'Yes', 'No'])
+    # Filter data based on attrition
+    if selected_attrition_middle != 'All Data':
+        attrition_value_middle = 1 if selected_attrition_middle == 'Yes' else 0
+        df_chart_middle = df_grouped[df_grouped['Attrition'] == attrition_value_middle]
+        df_metrics_middle = df_cleaned[df_cleaned['Attrition'] == attrition_value_middle]
 
-    st.markdown("<h2 style='text-align: center;'>Attrition by Jobrole</h2>", unsafe_allow_html=True)
-    if selected_attrition == 'All Data':
-        filtered_data = df_cleaned  
-        title = 'Selected Attrition: All Data'
     else:
-        attrition_value = 1 if selected_attrition == 'Yes' else 0
-        filtered_data = df_cleaned[df_cleaned['Attrition'] == attrition_value]
-        title = f'Attrition: {"Yes" if attrition_value == 1 else "No"}'
-    st.markdown(f"<h4 style='text-align: center;'>{title}</h4>", unsafe_allow_html=True)
-
-    st.write("")
-    col31, col32 = st.columns(2)
-    with col31:
-       jobrole_inv(df_metrics)
-    with col32:
-        work_life_balance_area_chart_faceted(df_metrics)
+        df_chart_middle = df_grouped
+        df_metrics_middle = df_cleaned
 
 
-    col20, col21 = st.columns(2)
-    with col20:
-        wlb_treemap(df_grouped, selected_attrition)           
-
+    # Column set up
+    col21, col22, col23, col24, col25, col26 = st.columns(6)
     with col21:
-        jobrole_satisfaction_chart(median_job_satisfaction)
+        median_income(df_metrics_middle)
+    with col22:        
+        mode_stock(df_metrics_middle)
+    with col23:
+        median_env(df_metrics_middle)    
+    with col24:
+        median_wlb(df_metrics_middle)
+    with col25:
+        median_jobinvolvement(df_metrics_middle)
+    with col26:
+        percent_overtime_yes(df_metrics_middle)
+
+    col27, col28, col29 = st.columns(3)
+    with col27:
+       jobrole_treemap(df_metrics_middle)
+    with col28:
+       environmentsatisfaction_treemap(df_chart_middle)
+    with col29:
+       overtime_treemap(df_chart_middle)
+        
+    col30, col31, col32 = st.columns([1.5, 1, 1])
+    with col30:
+        jobrole_inv(df_metrics_middle)
+    with col31:
+        relationship_treemap(df_chart_middle)
+    with col32:
+         distance_treemap(df_chart_middle)
+        
+
+      ########### bottom #############
+    # Third filter bar for bottom features
+    st.markdown("<h2 style='text-align: center;'>Selected Attrition on MonthlyIncome Features</h2>", unsafe_allow_html=True)
+    
+    selected_attrition_bottom = st.selectbox('Select Attrition (Monthly Income)', ['All Data', 'Yes', 'No'])
+
+    # Filter data based on attrition
+    if selected_attrition_bottom != 'All Data':
+        attrition_value_bottom = 1 if selected_attrition_bottom == 'Yes' else 0
+        df_chart_bottom = df_grouped[df_grouped['Attrition'] == attrition_value_bottom]
+        df_metrics_bottom = df_cleaned[df_cleaned['Attrition'] == attrition_value_bottom]
+
+    else:
+        df_chart_bottom = df_grouped
+        df_metrics_bottom = df_cleaned
+
       
     
-    col22, col23 = st.columns(2)
-    with col22:
-        jobinvolvement_chart(df_cleaned, df_metrics)
-    with col23:
-          combined_satisfaction_barchart(df_cleaned, df_metrics)
-
+    col41, col42, col43, col44, col45 = st.columns(5)
+    with col41:
+        median_income_research_director(df_metrics_bottom)
+    with col42:
+        median_income_manager(df_metrics_bottom)
+    with col43:
+        median_income_healthcare_representative(df_metrics_bottom)
+    with col44:
+        median_income_manufacturing_director(df_metrics_bottom)
+    with col45:
+        median_income_sales_executive(df_metrics_bottom)
+        
+    col46, col47, col48, col49 = st.columns(4)
+    with col46:
+        median_income_human_resources(df_metrics_bottom)
+    with col47:
+        median_income_laboratory_technician(df_metrics_bottom)
+    with col48:
+        median_income_research_scientist(df_metrics_bottom)
+    with col49:
+        median_income_sales_representative(df_metrics_bottom) 
+        
+    st.write("")
+    
+    st.markdown("<h3 style='text-align: center;'>JobRole-JobLevel-specified MonthlyIncome Features based on Selected Attrition</h3>", unsafe_allow_html=True)
+    st.write("")
+    cola, colb, colc, cold = st.columns(4)
+    with cola:
+        jobrole_monthly_income_metrics(df_metrics_bottom, df_cleaned, 'Human Resources')
+    with colb:
+        jobrole_monthly_income_metrics(df_metrics_bottom, df_cleaned, 'Laboratory Technician')
+    with colc:
+        jobrole_monthly_income_metrics(df_metrics_bottom, df_cleaned, 'Research Scientist')
+    with cold:
+        jobrole_monthly_income_metrics(df_metrics_bottom, df_cleaned, 'Sales Representative')
+    
     
 ##############################################################
 
@@ -997,69 +1017,64 @@ def render_analysis_page(df_balanced, df_grouped):
     st.markdown("## Conclusion")
     st.write("""
     Based on the analysis performed on employee attrition data, several key factors contributing to higher attrition rates have been identified:
-
-    ##### Demographic Factors:
-    - Male employees, single, aged between 28-32 years old, and those living more than 20 km from the office exhibit higher attrition rates.             
-    - Male employees who frequently work overtime, hold positions as Sales Representatives or Laboratory Technicians have significantly higher attrition rates.
-
-    ##### Income and Satisfaction:
-    - Monthly income and median environment satisfaction are significantly different between employees who leave (attrition) and those who stay.
-
-    ##### Job Roles with High Attrition:
-    - The job roles with the highest attrition rates are Laboratory Technicians, Sales Representatives, Research Scientists, and Sales Executives. Among these, all except Sales Executives have lower monthly incomes.
-
-    ###### Laboratory Technicians:
-    - They experience the lowest work-life balance.
-    - Higher attrition is observed at job level 1, with job involvement level 2, environment satisfaction level 1, and relationship satisfaction levels 2 and 3.
-    - This suggests that Laboratory Technicians feel a heavy work burden at entry levels, low work-life balance, unsatisfactory environmental support, and higher income despite relatively good relationships with colleagues.
-
-   ###### Research Scientists:
-    - They face the lowest work-life balance and lower salaries.
-    - Higher attrition is seen at job level 1 and job involvement level 1, indicating they may not feel their roles are important or valued.
-
-    ###### Human Resources:
-    - Job level 1 with involvement level 2 has the highest attrition.
-    - No job involvement level is less than 1, indicating sufficient role participation.
-    - Job level 3 employees have higher job involvement but lower job satisfaction.
-    - Higher attrition is associated with environment satisfaction level 2 and relationship satisfaction levels 2 and 3.
-
-    ###### Training and Job Satisfaction:
-    - Sales Representatives and Research and Development roles with only one training session in the last year show the lowest job satisfaction.
-
-    ###### Sales Executives:
-    - They have higher job involvement at level 4 and higher salaries.
-    - However, job level 4 also exhibits higher attrition.
+  
+    **1. Demographic Factors:**
+    - Higher attrition rates are observed among male employees, singles, and those aged 28-32 years.
+    - Employees living 20-30 km away from the office are more likely to leave.
+    
+    **2. Job Role and Job Level:**
+    - The highest attrition rates are found in job roles such as Laboratory Technician, Sales Executive, Research Scientist, and Sales Representative, especially at Job Level 1.
+    
+    **3. Income:**
+    - Median monthly income is generally lower in roles with high attrition, particularly for Laboratory Technicians, Research Scientists, and Sales Representatives.
+    
+    **4. Work Environment Satisfaction:**
+    - Median environment satisfaction is lower among employees who leave.
+    - 54.75% of employees who leave experience overtime, but overtime itself does not significantly impact environment satisfaction.
+    - Interestingly, lower environment satisfaction is more common among those not working overtime, possibly because these employees feel less motivated in their work.
+    - Lower environment satisfaction is more prevalent among employees aged 43-47 who do not work overtime.
+    
+    **5.Total Working Years:**
+    - Employees with 0-3 years in Human Resources, 26-40 years in Sales, and 11-15 years in Research and Development have the lowest environment satisfaction.
+    
+    **6. Job Involvement and Relationship Satisfaction:**
+    - The highest attrition is associated with job involvement level 3.
+    - Male employees generally have higher relationship satisfaction than females.
+    - The lowest satisfaction is in males aged 33-37 in Sales and R&D and females aged 18-22 and 33-37 in R&D, and 23-27 in Sales and HR.
+    
+    **7. Work-Life Balance (WLB):**
+    - Women with a commute of 0-9 km have the best work-life balance regardless of overtime status.
+    - Men generally have moderate to low work-life balance across all distances unless they work overtime.
+    
+    **8. Income Discrepancies:**
+    - Significant income discrepancies are found in HR Level 1, Laboratory Technicians Level 3, Research Scientist Level 1, and Sales Representative Level 2.
+             
 
     ## Business Action Recommendations
     To address these issues and reduce attrition rates, the following actions are recommended:
+    
+    **1. Targeted Retention Programs:**
+    - For Demographics: Develop retention initiatives specifically for male, single employees aged 28-32, and those living 20-30 km from the office. This can include mentorship programs, community-building activities, and social events to increase engagement and satisfaction.
+    - For Commuters: Offer incentives like transportation subsidies, flexible working hours, and remote work options to reduce commute stress and improve work-life balance for employees living further away.
+   
+    **2. Compensation and Benefits Adjustment:**
+    - Address Income Disparities: Conduct regular salary reviews to ensure competitive and fair compensation, particularly for high-attrition roles such as Laboratory Technicians, Research Scientists, and Sales Representatives. Adjust compensation for roles and levels identified with significant income discrepancies (HR Level 1, Laboratory Level 3, Research Scientist Level 1, and Sales Representative Level 2).
+    - Enhance Benefits Packages: Improve benefits packages to include comprehensive health care, nutritious lunch and snacks, wellness programs, and performance bonuses.
+    
+    **3. Improve Work Environment Satisfaction:**
+    - Environment Enhancement: Implement initiatives to improve the physical and cultural work environment, such as modernizing office spaces, providing ergonomic furniture, place a mini garden next to the RnD department office, and creating a more inclusive and collaborative culture.
+    - Provide mental health consultation center, team-building program, and regular company outing. 
+    - Recognition and Reward Programs: Establish programs to recognize and reward employees' contributions regularly, boosting morale and satisfaction. Special focus should be given to employees aged 43-47 who report lower satisfaction levels.
+    - Support for Overtime Workers: Develop structured support for employees who work overtime, ensuring they have access to resources and recognition for their efforts.
+    
+    **4. Career Development and Support Programs:**
+    - Training and Development: Provide continuous learning opportunities, skill development programs, and clear career progression paths to increase job involvement and satisfaction, particularly for roles with high attrition.
+    - Mentorship and Coaching: Implement mentorship programs to guide employees in their career growth and foster a supportive work environment. This is especially important for employees in their early and mid-career stages in Human Resources, Sales, and Research and Development.
+    - Job Involvement Strategies: Increase job involvement by ensuring roles are meaningful and employees understand their impact on the organization. Engage employees through challenging projects and decision-making opportunities.
 
-    ##### 1. Improve Work-Life Balance:
-    - Implement flexible working hours and remote work options, especially for roles with low work-life balance like Laboratory Technicians and Research Scientists.
-
-    ##### 2. Enhance Compensation and Benefits:
-    - Review and potentially increase the salaries for roles with high attrition but lower incomes, such as Laboratory Technicians, Sales Representatives, and Research Scientists.
-    - Offer additional benefits like transportation allowances for employees living far from the office.
-
-    ##### 3. Increase Training and Development:
-    - Provide more frequent and comprehensive training programs for all employees, particularly those in Sales Representative and Research and Development roles, to improve job satisfaction and skill development.
-
-    ##### 4. Strengthen Employee Engagement and Support:
-    - Develop programs to enhance job involvement and recognition, especially for entry-level positions and roles where employees feel undervalued.
-    - Foster a supportive work environment by improving workplace conditions and resources.
-
-    ##### 5. Focus on Career Development:
-    - Implement clear career progression paths and opportunities for promotion, especially for job levels with higher attrition.
-    - Offer mentorship and coaching programs to help employees at all levels feel more engaged and supported.
-
-    ##### 6. Targeted Interventions for High Attrition Roles:
-    - For Laboratory Technicians: Focus on improving work-life balance, environmental support, and job involvement.
-    - For Research Scientists: Address salary issues and increase job involvement to help them feel more valued.
-    - For Human Resources: Improve job satisfaction by addressing environmental and relationship factors.
-
-    ##### 7. Monitor and Adapt:
-    - Continuously monitor employee satisfaction and attrition rates.
-    - Adapt strategies based on feedback and changing employee needs to ensure ongoing improvement in retention efforts.
-
+    **5. Hear Employee's Toughts:**
+    - Provide a suggestion box for employees to share their thoughts, and then conduct regular evaluations based on the feedback received.
+             
     By implementing these recommendations, the organization can work towards reducing attrition rates, improving employee satisfaction, and fostering a more supportive and engaging work environment.
     """)
 
