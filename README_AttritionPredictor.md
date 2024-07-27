@@ -1,38 +1,59 @@
 # Predicting Attrition with Trained Model
 
-This guide explains how to use the provided Python script to predict attrition using a trained machine learning model.
+This guide explains how to use the provided Python script (`attrition_predictor.py`) with trained machine learning model (`trained_rf_model.joblib`) to predict attrition.
 
 ## Prerequisites
 
 Before getting started, ensure you have the following:
 
-- Python installed on your system
-- Necessary Python libraries (scikit-learn==1.4.2, pandas, numpy, joblib) installed. 
-- Make sure to install scikit-learn version 1.4.2 if you haven't. 
-  You can install them using pip:
+1. Python version 3.11.4 installed on your system. If you haven't:
+    a. Visit the official Python website: [Python Downloads](https://www.python.org/downloads/)
+    b. Find the version 3.11.4 and click on the link to download the installer for your operating system (Windows, macOS, or Linux).
+    c. Run the installer and follow the on-screen instructions.
+        - On Windows, make sure to check the box that says "Add Python to PATH" during the installation process.
+        - On macOS and Linux, you may need to use `brew` or `apt-get` respectively, if you prefer using a package manager.
 
+
+2. Downloaded necessary files
+    All files are available at https://github.com/Ngno/jayajaya/tree/main:
+
+    a. **Download the Attrition Predictor Requirement Script:**
+        - Download the Python script (`requirements_attritionpredictor.txt`).
+
+    b. **Download the Python Script:**
+        - Download the Python script (`attrition_predictor.py`).
+
+    c. **Download the Trained Model:**
+        - Download the trained model file (`trained_rf_model.joblib`).
+
+    d. **Place the Files in the Same Folder:**
+        - Ensure all files are in the same folder.
+
+3. Set up environment and installed requirement libraries.
+    This script and model need specific version libraries to be installed. Set up environment to avoid conflict with other apps.
+    You can set up environment using Anaconda or pipenv. Here's how you can proceed. You can change the environment name (`env-name`) to your preferred name:
+    
+    ## Setup Environment - Anaconda
     ```
-    pip install scikit-learn==1.4.2 pandas numpy joblib
+    conda create --name env-name python=3.11.4
+    conda activate env-name
+    pip install -r requirements_attritionpredictor.txt
     ```
 
-- Trained model file (`trained_rf_model.joblib`)
+    ## Setup Environment - Shell/Terminal
+    ```
+    mkdir env-name
+    cd env-name
+    pip install pipenv
+    pipenv shell
+    pip install -r requirements_attritionpredictor.txt
+    ```
 
 ## Usage
 
-Follow these steps to predict attrition using the provided Python script:
-
-1. **Download the Python Script:**
-    - Download the Python script (`attrition_predictor.py`) from the provided location.
-
-2. **Download the Trained Model:**
-    - Download the trained model file (`trained_rf_model.joblib`).
-
-3. **Place the Files in the Same Folder:**
-    - Ensure the trained model file (`trained_rf_model.joblib`) and the Python script (`attrition_predictor.py`) are in the same folder.
-
-4. **Run the Script:**
+1. **Run the Script:**
     - Open your terminal or command prompt.
-    - Navigate to the directory where the Python script is located.
+    - Navigate to the directory where the Python script `attrition_predictor.py` is located.
 
         ```
         cd path/to/script/directory
@@ -44,7 +65,7 @@ Follow these steps to predict attrition using the provided Python script:
         python attrition_predictor.py
         ```
 
-5. **Follow the Prompts:**
+2. **Follow the Prompts:**
     - Enter the values for employee characteristics based on the prompts.
     - For features with numeric groupings, enter a number as referenced.
         Example: 
